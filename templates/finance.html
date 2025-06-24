@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanças - Gestão Financeira</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1><i class="fas fa-chart-line"></i> Gestão Financeira</h1>
+            <nav class="nav-menu">
+                <a href="/" class="nav-link">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="/kanban" class="nav-link">
+                    <i class="fas fa-columns"></i> Kanban
+                </a>
+                <a href="/finance" class="nav-link active">
+                    <i class="fas fa-chart-line"></i> Finanças
+                </a>
+            </nav>
+            <button id="addFinanceBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nova Movimentação
+            </button>
+        </div>
+    </header>
+
+    <!-- Finance Content -->
+    <div class="finance-container">
+        <!-- Finance Summary -->
+        <div class="finance-summary">
+            <div class="summary-card income">
+                <i class="fas fa-arrow-up"></i>
+                <div>
+                    <h3>Receitas</h3>
+                    <p id="totalIncome">R$ 0,00</p>
+                </div>
+            </div>
+            <div class="summary-card expense">
+                <i class="fas fa-arrow-down"></i>
+                <div>
+                    <h3>Despesas</h3>
+                    <p id="totalExpense">R$ 0,00</p>
+                </div>
+            </div>
+            <div class="summary-card balance">
+                <i class="fas fa-balance-scale"></i>
+                <div>
+                    <h3>Saldo</h3>
+                    <p id="totalBalance">R$ 0,00</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Finance List -->
+        <div class="finance-list">
+            <div class="list-header">
+                <h3>Movimentações Financeiras</h3>
+                <div class="filter-controls">
+                    <select id="monthFilter">
+                        <option value="">Todos os meses</option>
+                        <option value="1">Janeiro</option>
+                        <option value="2">Fevereiro</option>
+                        <option value="3">Março</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Maio</option>
+                        <option value="6">Junho</option>
+                        <option value="7">Julho</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Setembro</option>
+                        <option value="10">Outubro</option>
+                        <option value="11">Novembro</option>
+                        <option value="12">Dezembro</option>
+                    </select>
+                </div>
+            </div>
+            <div id="financeItems"></div>
+        </div>
+    </div>
+
+    <!-- Finance Modal -->
+    <div id="financeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="financeModalTitle">Nova Movimentação</h2>
+                <button class="close-btn" onclick="closeModal('financeModal')">&times;</button>
+            </div>
+            <form id="financeForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="financeTitle">Título:</label>
+                        <input type="text" id="financeTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="financeValue">Valor:</label>
+                        <input type="number" id="financeValue" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="financeDescription">Descrição:</label>
+                    <textarea id="financeDescription" rows="3"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="financeDate">Data:</label>
+                        <input type="date" id="financeDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="financeRecurrence">Recorrência:</label>
+                        <select id="financeRecurrence">
+                            <option value="NONE">Nenhuma</option>
+                            <option value="MONTHLY">Mensal</option>
+                            <option value="YEARLY">Anual</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('financeModal')" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/finance.js"></script>
+</body>
+</html>

@@ -1,16 +1,157 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Flask + SQLite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema Kanban & Finanças</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Olá, {{ name }}! 👋</h1>
-    <h2>Lista de Usuários:</h2>
-    <ul>
-        {% for user in users %}
-            <li>{{ user.id }} - {{ user.name }}</li>
-        {% endfor %}
-    </ul>
+    <!-- Login/Register Modal -->
+    <div id="authModal" class="modal active">
+        <div class="modal-content">
+            <h2 id="authTitle">Login</h2>
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="username">Usuário:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" id="authSubmit">Entrar</button>
+                <p class="auth-switch">
+                    <span id="authSwitchText">Não tem conta?</span>
+                    <a href="#" id="authSwitchLink">Registrar</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+                <nav class="nav-menu">
+                    <a href="/" class="nav-link active">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                    <a href="/kanban" class="nav-link">
+                        <i class="fas fa-columns"></i> Kanban
+                    </a>
+                    <a href="/finance" class="nav-link">
+                        <i class="fas fa-chart-line"></i> Finanças
+                    </a>
+                </nav>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-container">
+            <!-- Summary Cards -->
+            <div class="summary-grid">
+                <div class="summary-card tasks">
+                    <div class="card-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Total de Tarefas</h3>
+                        <p id="totalTasks" class="card-number">0</p>
+                        <small id="tasksSummary">0 pendentes, 0 concluídas</small>
+                    </div>
+                </div>
+
+                <div class="summary-card income">
+                    <div class="card-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Receitas do Mês</h3>
+                        <p id="monthlyIncome" class="card-number">R$ 0,00</p>
+                        <small>Movimentações positivas</small>
+                    </div>
+                </div>
+
+                <div class="summary-card expense">
+                    <div class="card-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Despesas do Mês</h3>
+                        <p id="monthlyExpense" class="card-number">R$ 0,00</p>
+                        <small>Movimentações negativas</small>
+                    </div>
+                </div>
+
+                <div class="summary-card balance">
+                    <div class="card-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Saldo do Mês</h3>
+                        <p id="monthlyBalance" class="card-number">R$ 0,00</p>
+                        <small>Receitas - Despesas</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="activities-grid">
+                <!-- Recent Tasks -->
+                <div class="activity-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-clock"></i> Tarefas Recentes</h2>
+                        <a href="/kanban" class="view-all-btn">Ver Todas</a>
+                    </div>
+                    <div class="activity-list" id="recentTasks">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Recent Finances -->
+                <div class="activity-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-money-bill-wave"></i> Movimentações Recentes</h2>
+                        <a href="/finance" class="view-all-btn">Ver Todas</a>
+                    </div>
+                    <div class="activity-list" id="recentFinances">
+                        <!-- Finances will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h2><i class="fas fa-bolt"></i> Ações Rápidas</h2>
+                <div class="actions-grid">
+                    <button class="action-btn" onclick="window.location.href='/kanban'">
+                        <i class="fas fa-plus"></i>
+                        <span>Nova Tarefa</span>
+                    </button>
+                    <button class="action-btn" onclick="window.location.href='/finance'">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span>Nova Movimentação</span>
+                    </button>
+                    <button class="action-btn" onclick="generateReport()">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Relatório</span>
+                    </button>
+                    <button class="action-btn" onclick="exportData()">
+                        <i class="fas fa-download"></i>
+                        <span>Exportar Dados</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
 </body>
 </html>

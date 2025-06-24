@@ -8,20 +8,20 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-
 # Modelo User
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
 
-# Criar tabelas antes da primeira requisição
+# Criar tabelas logo ao iniciar
 
 
-@app.before_first_request
-def create_tables():
+with app.app_context():
     db.create_all()
 
-# Rota GET - retorna todos os usuários em JSON
+# Rota GET
 
 
 @app.route('/users', methods=['GET'])
@@ -29,8 +29,9 @@ def get_users():
     users = User.query.all()
     return jsonify([{'id': user.id, 'name': user.name} for user in users])
 
+# Rota POST
 
-# Rota POST - cria um novo usuário
+
 @app.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json()
@@ -39,8 +40,9 @@ def create_user():
     db.session.commit()
     return jsonify({'id': new_user.id, 'name': new_user.name}), 201
 
+# Página HTML
 
-# Página HTML com listagem de usuários
+
 @app.route('/')
 def index():
     users = User.query.all()

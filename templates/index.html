@@ -2,10 +2,15 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Flask com Jinja2</title>
+    <title>Flask + SQLite</title>
 </head>
 <body>
-    <h1>Olá, {{ name }}! 🚀</h1>
-    <p>Bem-vindo ao Flask com Templates!</p>
+    <h1>Olá, {{ name }}! 👋</h1>
+    <h2>Lista de Usuários:</h2>
+    <ul>
+        {% for user in users %}
+            <li>{{ user.id }} - {{ user.name }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

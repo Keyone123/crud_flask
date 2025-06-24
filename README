@@ -1,0 +1,14 @@
+🚀 CRUD Flask com SQLite
+
+Este é um projeto de CRUD simples usando Flask + SQLite. A API possui endpoints REST para manipulação de usuários e uma interface web com templates Jinja2 para visualização.
+📚 Tecnologias Utilizadas
+
+    Python 3.12
+
+    Flask 3.x
+
+    Flask-SQLAlchemy
+
+    SQLite
+
+    Gunicorn (para deploy no Railway)

@@ -1,4 +1,6 @@
-from app import app, db, User
+from app import app
+from __init__ import db
+from models import User, Task, TaskCategory, Finance, FinanceCategory
 from werkzeug.security import generate_password_hash
 
 
@@ -67,7 +69,6 @@ def create_sample_data():
     """
     with app.app_context():
         try:
-            from app import Task, Finance, TaskCategory, FinanceCategory
             from datetime import date
             
             # Criar categorias de tarefas
@@ -181,8 +182,7 @@ def create_sample_data():
             print("✅ Dados de exemplo criados com sucesso!")
             print(f"📝 {len(sample_tasks)} tarefas criadas")
             print(
-                f"💰 {len(sample_finances)} movimentações financeiras "
-                "criadas"
+                f"💰 {len(sample_finances)} movimentações financeiras criadas"
             )
             
         except Exception as e:
@@ -203,14 +203,12 @@ def verify_database():
                 print(f"   - {user.username}")
             
             # Verificar tarefas
-            from app import Task
             tasks = Task.query.all()
             print(f"\n📝 Tarefas no banco: {len(tasks)}")
             for task in tasks:
                 print(f"   - {task.title} ({task.status})")
             
             # Verificar finanças
-            from app import Finance
             finances = Finance.query.all()
             print(f"\n💰 Movimentações no banco: {len(finances)}")
             for finance in finances:

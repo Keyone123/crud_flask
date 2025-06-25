@@ -13,13 +13,16 @@
         <div class="header-content">
             <h1><i class="fas fa-chart-line"></i> Gestão Financeira</h1>
             <nav class="nav-menu">
-                <a href="/" class="nav-link">
+                <a href="/" class="nav-link active">
                     <i class="fas fa-home"></i> Dashboard
                 </a>
-                <a href="/kanban" class="nav-link">
-                    <i class="fas fa-columns"></i> Kanban
+                <a href="/kanban-university" class="nav-link">
+                    <i class="fas fa-graduation-cap"></i> Universidade
                 </a>
-                <a href="/finance" class="nav-link active">
+                <a href="/kanban-work" class="nav-link">
+                    <i class="fas fa-briefcase"></i> Trabalho
+                </a>
+                <a href="/finance" class="nav-link">
                     <i class="fas fa-chart-line"></i> Finanças
                 </a>
             </nav>
@@ -117,7 +120,19 @@
                             <option value="NONE">Nenhuma</option>
                             <option value="MONTHLY">Mensal</option>
                             <option value="YEARLY">Anual</option>
+                            <option value="INSTALLMENT">Parcelado</option>
                         </select>
+                    </div>
+                </div>
+
+                <div class="form-row" id="installmentFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="financeInstallments">Número de Parcelas:</label>
+                        <input type="number" id="financeInstallments" min="1" max="60" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="installmentValue">Valor por Parcela:</label>
+                        <input type="number" id="installmentValue" step="0.01" readonly>
                     </div>
                 </div>
                 
@@ -130,5 +145,31 @@
     </div>
 
     <script src="/static/js/finance.js"></script>
+    <script>
+        document.getElementById('financeRecurrence').addEventListener('change', function() {
+            const installmentFields = document.getElementById('installmentFields');
+            if (this.value === 'INSTALLMENT') {
+                installmentFields.style.display = 'block';
+            } else {
+                installmentFields.style.display = 'none';
+            }
+        });
+
+        document.getElementById('financeValue').addEventListener('input', function() {
+            const installments = document.getElementById('financeInstallments').value;
+            const installmentValue = document.getElementById('installmentValue');
+            if (installments > 1) {
+                installmentValue.value = (this.value / installments).toFixed(2);
+            }
+        });
+
+        document.getElementById('financeInstallments').addEventListener('input', function() {
+            const totalValue = document.getElementById('financeValue').value;
+            const installmentValue = document.getElementById('installmentValue');
+            if (this.value > 1) {
+                installmentValue.value = (totalValue / this.value).toFixed(2);
+            }
+        });
+    </script>
 </body>
 </html>

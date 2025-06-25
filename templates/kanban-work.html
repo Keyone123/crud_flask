@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Trabalho - Sistema de Tarefas</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .work-theme {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .work-accent {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .kanban-column.work {
+            border-top: 4px solid #fa709a;
+        }
+    </style>
+</head>
+<body class="work-theme">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1><i class="fas fa-briefcase"></i> Kanban Trabalho</h1>
+            <nav class="nav-menu">
+                <a href="/" class="nav-link">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="/kanban-university" class="nav-link">
+                    <i class="fas fa-graduation-cap"></i> Universidade
+                </a>
+                <a href="/kanban-work" class="nav-link active">
+                    <i class="fas fa-briefcase"></i> Trabalho
+                </a>
+                <a href="/finance" class="nav-link">
+                    <i class="fas fa-chart-line"></i> Finanças
+                </a>
+            </nav>
+            <button id="addTaskBtn" class="btn btn-primary work-accent">
+                <i class="fas fa-plus"></i> Nova Tarefa Profissional
+            </button>
+        </div>
+    </header>
+
+    <!-- Kanban Board -->
+    <div class="kanban-container">
+        <div class="kanban-board">
+            <div class="kanban-column work" data-status="TO_DO">
+                <div class="column-header">
+                    <h3><i class="fas fa-clipboard-list"></i> A Fazer</h3>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="task-list" id="todo-tasks"></div>
+            </div>
+            
+            <div class="kanban-column work" data-status="IN_PROGRESS">
+                <div class="column-header">
+                    <h3><i class="fas fa-cogs"></i> Em Desenvolvimento</h3>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="task-list" id="progress-tasks"></div>
+            </div>
+            
+            <div class="kanban-column work" data-status="DONE">
+                <div class="column-header">
+                    <h3><i class="fas fa-check-circle"></i> Entregue</h3>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="task-list" id="done-tasks"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="taskModalTitle">Nova Tarefa Profissional</h2>
+                <button class="close-btn" onclick="closeModal('taskModal')">&times;</button>
+            </div>
+            <form id="taskForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskTitle">Título:</label>
+                        <input type="text" id="taskTitle" required placeholder="Ex: Desenvolver API de usuários">
+                    </div>
+                    <div class="form-group">
+                        <label for="taskPriority">Prioridade:</label>
+                        <select id="taskPriority">
+                            <option value="LOW">Baixa</option>
+                            <option value="MEDIUM" selected>Média</option>
+                            <option value="HIGH">Alta</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDescription">Descrição:</label>
+                    <textarea id="taskDescription" rows="3" placeholder="Descreva os requisitos e detalhes da tarefa..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskDueDate">Prazo de Entrega:</label>
+                        <input type="date" id="taskDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="taskAssigned">Responsável/Cliente:</label>
+                        <input type="text" id="taskAssigned" placeholder="Ex: João Silva - Projeto X">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskTags">Tags (separadas por vírgula):</label>
+                    <input type="text" id="taskTags" placeholder="backend, frontend, urgente, bug">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('taskModal')" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary work-accent">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Define o tipo de tarefa para esta página
+        window.TASK_TYPE = 'WORK';
+    </script>
+    <script src="/static/js/kanban-work.js"></script>
+</body>
+</html>

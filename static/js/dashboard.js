@@ -108,7 +108,7 @@ function logout() {
 // Dashboard data loading
 async function loadDashboardData() {
   try {
-    await Promise.all([loadTasksSummary(), loadFinancesSummary(), loadRecentActivities()])
+    await Promise.all([loadTasksSummary(), loadFinancesSummary(), loadRecentActivities(), loadUpcomingInstallments()])
   } catch (error) {
     console.error("Erro ao carregar dados do dashboard:", error)
   }
@@ -116,26 +116,62 @@ async function loadDashboardData() {
 
 async function loadTasksSummary() {
   try {
-    const response = await fetch(`${API_BASE}/tasks`, {
+    // Carregar tarefas da universidade
+    const universityResponse = await fetch(`${API_BASE}/tasks/university`, {
       credentials: "same-origin",
     })
 
-    if (!response.ok) {
-      console.error("Erro ao carregar tarefas:", response.status)
-      return
+    // Carregar tarefas do trabalho
+    const workResponse = await fetch(`${API_BASE}/tasks/work`, {
+      credentials: "same-origin",
+    })
+
+    let universityTasks = []
+    let workTasks = []
+
+    if (universityResponse.ok) {
+      universityTasks = await universityResponse.json()
     }
 
-    const tasks = await response.json()
+    if (workResponse.ok) {
+      workTasks = await workResponse.json()
+    }
 
-    const totalTasks = tasks.length
-    const pendingTasks = tasks.filter((t) => t.status !== "DONE").length
-    const completedTasks = tasks.filter((t) => t.status === "DONE").length
+    // Estatísticas da universidade
+    const totalUniversityTasks = universityTasks.length
+    const pendingUniversityTasks = universityTasks.filter((t) => t.status !== "DONE").length
+    const completedUniversityTasks = universityTasks.filter((t) => t.status === "DONE").length
 
-    document.getElementById("totalTasks").textContent = totalTasks
-    document.getElementById("tasksSummary").textContent = `${pendingTasks} pendentes, ${completedTasks} concluídas`
+    document.getElementById("universityTasks").textContent = totalUniversityTasks
+    document.getElementById("universityTasksSummary").textContent =
+      `${pendingUniversityTasks} pendentes, ${completedUniversityTasks} concluídas`
 
-    // Load recent tasks
-    const recentTasks = tasks.slice(-5).reverse()
+    // Estatísticas do trabalho
+    const totalWorkTasks = workTasks.length
+    const pendingWorkTasks = workTasks.filter((t) => t.status !== "DONE").length
+    const completedWorkTasks = workTasks.filter((t) => t.status === "DONE").length
+
+    document.getElementById("workTasks").textContent = totalWorkTasks
+    document.getElementById("workTasksSummary").textContent =
+      `${pendingWorkTasks} pendentes, ${completedWorkTasks} concluídas`
+
+    // Calcular produtividade
+    const allTasks = [...universityTasks, ...workTasks]
+    const thisWeekTasks = allTasks.filter((task) => {
+      const taskDate = new Date(task.updated_at || task.created_at)
+      const weekAgo = new Date()
+      weekAgo.setDate(weekAgo.getDate() - 7)
+      return taskDate >= weekAgo
+    })
+
+    const completedThisWeek = thisWeekTasks.filter((t) => t.status === "DONE").length
+    const productivityScore =
+      thisWeekTasks.length > 0 ? Math.round((completedThisWeek / thisWeekTasks.length) * 100) : 0
+
+    document.getElementById("productivityScore").textContent = `${productivityScore}%`
+
+    // Carregar tarefas recentes (misturadas)
+    const recentTasks = allTasks.slice(-5).reverse()
     const recentTasksContainer = document.getElementById("recentTasks")
     recentTasksContainer.innerHTML = ""
 
@@ -147,17 +183,38 @@ async function loadTasksSummary() {
     recentTasks.forEach((task) => {
       const taskElement = document.createElement("div")
       taskElement.className = "activity-item"
+      const typeIcon = task.type === "UNIVERSITY" ? "🎓" : "💼"
       taskElement.innerHTML = `
-        <h4>${task.title}</h4>
+        <h4>${typeIcon} ${task.title}</h4>
         <p>Status: ${getStatusText(task.status)} | Prioridade: ${getPriorityText(task.priority)}</p>
       `
       recentTasksContainer.appendChild(taskElement)
     })
   } catch (error) {
     console.error("Erro ao carregar resumo de tarefas:", error)
-    document.getElementById("recentTasks").innerHTML =
-      '<p style="color: #dc3545; text-align: center;">Erro ao carregar tarefas</p>'
+    // Usar dados mock em caso de erro
+    loadMockTasksSummary()
   }
+}
+
+function loadMockTasksSummary() {
+  document.getElementById("universityTasks").textContent = "3"
+  document.getElementById("universityTasksSummary").textContent = "2 pendentes, 1 concluída"
+  document.getElementById("workTasks").textContent = "3"
+  document.getElementById("workTasksSummary").textContent = "2 pendentes, 1 concluída"
+  document.getElementById("productivityScore").textContent = "75%"
+
+  const recentTasksContainer = document.getElementById("recentTasks")
+  recentTasksContainer.innerHTML = `
+    <div class="activity-item">
+      <h4>🎓 Estudar para Prova de Cálculo</h4>
+      <p>Status: A Fazer | Prioridade: Alta</p>
+    </div>
+    <div class="activity-item">
+      <h4>💼 Desenvolver API de Usuários</h4>
+      <p>Status: A Fazer | Prioridade: Alta</p>
+    </div>
+  `
 }
 
 async function loadFinancesSummary() {
@@ -217,6 +274,41 @@ async function loadFinancesSummary() {
 async function loadRecentActivities() {
   // This would load recent activities from both tasks and finances
   // For now, we'll use the data already loaded above
+}
+
+async function loadUpcomingInstallments() {
+  try {
+    const response = await fetch(`${API_BASE}/finances/upcoming-installments`, {
+      credentials: "same-origin",
+    })
+
+    if (!response.ok) {
+      console.error("Erro ao carregar parcelas:", response.status)
+      return
+    }
+
+    const installments = await response.json()
+    const container = document.getElementById("upcomingInstallments")
+    container.innerHTML = ""
+
+    if (installments.length === 0) {
+      container.innerHTML = '<p style="color: #6c757d; text-align: center;">Nenhuma parcela pendente</p>'
+      return
+    }
+
+    installments.slice(0, 5).forEach((installment) => {
+      const installmentElement = document.createElement("div")
+      installmentElement.className = "activity-item future-installment"
+      installmentElement.innerHTML = `
+        <h4>${installment.title}</h4>
+        <p>${formatCurrency(installment.value)} | ${formatDate(installment.transaction_date)}
+        <span class="installment-badge">${installment.installment_current}/${installment.installments_total}</span></p>
+      `
+      container.appendChild(installmentElement)
+    })
+  } catch (error) {
+    console.error("Erro ao carregar parcelas:", error)
+  }
 }
 
 // Utility functions

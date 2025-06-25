@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Universidade - Sistema de Tarefas</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .university-theme {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .university-accent {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .kanban-column.university {
+            border-top: 4px solid #4facfe;
+        }
+    </style>
+</head>
+<body class="university-theme">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1><i class="fas fa-graduation-cap"></i> Kanban Universidade</h1>
+            <nav class="nav-menu">
+                <a href="/" class="nav-link">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="/kanban-university" class="nav-link active">
+                    <i class="fas fa-graduation-cap"></i> Universidade
+                </a>
+                <a href="/kanban-work" class="nav-link">
+                    <i class="fas fa-briefcase"></i> Trabalho
+                </a>
+                <a href="/finance" class="nav-link">
+                    <i class="fas fa-chart-line"></i> Finanças
+                </a>
+            </nav>
+            <button id="addTaskBtn" class="btn btn-primary university-accent">
+                <i class="fas fa-plus"></i> Nova Tarefa Acadêmica
+            </button>
+        </div>
+    </header>
+
+    <!-- Kanban Board -->
+    <div class="kanban-container">
+        <div class="kanban-board">
+            <div class="kanban-column university" data-status="TO_DO">
+                <div class="column-header">
+                    <h3><i class="fas fa-book"></i> Para Estudar</h3>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="task-list" id="todo-tasks"></div>
+            </div>
+            
+            <div class="kanban-column university" data-status="IN_PROGRESS">
+                <div class="column-header">
+                    <h3><i class="fas fa-pencil-alt"></i> Estudando</h3>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="task-list" id="progress-tasks"></div>
+            </div>
+            
+            <div class="kanban-column university" data-status="DONE">
+                <div class="column-header">
+                    <h3><i class="fas fa-check-circle"></i> Concluído</h3>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="task-list" id="done-tasks"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="taskModalTitle">Nova Tarefa Acadêmica</h2>
+                <button class="close-btn" onclick="closeModal('taskModal')">&times;</button>
+            </div>
+            <form id="taskForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskTitle">Título:</label>
+                        <input type="text" id="taskTitle" required placeholder="Ex: Estudar para prova de Cálculo">
+                    </div>
+                    <div class="form-group">
+                        <label for="taskPriority">Prioridade:</label>
+                        <select id="taskPriority">
+                            <option value="LOW">Baixa</option>
+                            <option value="MEDIUM" selected>Média</option>
+                            <option value="HIGH">Alta</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskDescription">Descrição:</label>
+                    <textarea id="taskDescription" rows="3" placeholder="Descreva os detalhes da atividade acadêmica..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskDueDate">Data de Entrega/Prova:</label>
+                        <input type="date" id="taskDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="taskAssigned">Matéria/Professor:</label>
+                        <input type="text" id="taskAssigned" placeholder="Ex: Cálculo I - Prof. João">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taskTags">Tags (separadas por vírgula):</label>
+                    <input type="text" id="taskTags" placeholder="prova, trabalho, seminário, projeto">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" onclick="closeModal('taskModal')" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary university-accent">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Define o tipo de tarefa para esta página
+        window.TASK_TYPE = 'UNIVERSITY';
+    </script>
+    <script src="/static/js/kanban-university.js"></script>
+</body>
+</html>

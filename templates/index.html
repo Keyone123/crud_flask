@@ -40,8 +40,11 @@
                     <a href="/" class="nav-link active">
                         <i class="fas fa-home"></i> Dashboard
                     </a>
-                    <a href="/kanban" class="nav-link">
-                        <i class="fas fa-columns"></i> Kanban
+                    <a href="/kanban-university" class="nav-link">
+                        <i class="fas fa-graduation-cap"></i> Universidade
+                    </a>
+                    <a href="/kanban-work" class="nav-link">
+                        <i class="fas fa-briefcase"></i> Trabalho
                     </a>
                     <a href="/finance" class="nav-link">
                         <i class="fas fa-chart-line"></i> Finanças
@@ -59,12 +62,23 @@
             <div class="summary-grid">
                 <div class="summary-card tasks">
                     <div class="card-icon">
-                        <i class="fas fa-tasks"></i>
+                        <i class="fas fa-graduation-cap"></i>
                     </div>
                     <div class="card-content">
-                        <h3>Total de Tarefas</h3>
-                        <p id="totalTasks" class="card-number">0</p>
-                        <small id="tasksSummary">0 pendentes, 0 concluídas</small>
+                        <h3>Tarefas Universidade</h3>
+                        <p id="universityTasks" class="card-number">0</p>
+                        <small id="universityTasksSummary">0 pendentes, 0 concluídas</small>
+                    </div>
+                </div>
+
+                <div class="summary-card tasks">
+                    <div class="card-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Tarefas Trabalho</h3>
+                        <p id="workTasks" class="card-number">0</p>
+                        <small id="workTasksSummary">0 pendentes, 0 concluídas</small>
                     </div>
                 </div>
 
@@ -75,7 +89,7 @@
                     <div class="card-content">
                         <h3>Receitas do Mês</h3>
                         <p id="monthlyIncome" class="card-number">R$ 0,00</p>
-                        <small>Movimentações positivas</small>
+                        <small id="incomeComparison">vs mês anterior</small>
                     </div>
                 </div>
 
@@ -86,7 +100,7 @@
                     <div class="card-content">
                         <h3>Despesas do Mês</h3>
                         <p id="monthlyExpense" class="card-number">R$ 0,00</p>
-                        <small>Movimentações negativas</small>
+                        <small id="expenseComparison">vs mês anterior</small>
                     </div>
                 </div>
 
@@ -97,7 +111,18 @@
                     <div class="card-content">
                         <h3>Saldo do Mês</h3>
                         <p id="monthlyBalance" class="card-number">R$ 0,00</p>
-                        <small>Receitas - Despesas</small>
+                        <small id="balanceStatus">Situação financeira</small>
+                    </div>
+                </div>
+
+                <div class="summary-card productivity">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Produtividade</h3>
+                        <p id="productivityScore" class="card-number">0%</p>
+                        <small>Tarefas concluídas esta semana</small>
                     </div>
                 </div>
             </div>
@@ -124,6 +149,17 @@
                     <div class="activity-list" id="recentFinances">
                         <!-- Finances will be loaded here -->
                     </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Installments -->
+            <div class="activity-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-calendar-alt"></i> Próximas Parcelas</h2>
+                    <a href="/finance" class="view-all-btn">Ver Todas</a>
+                </div>
+                <div class="activity-list" id="upcomingInstallments">
+                    <!-- Installments will be loaded here -->
                 </div>
             </div>
 
